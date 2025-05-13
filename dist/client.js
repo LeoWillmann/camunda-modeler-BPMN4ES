@@ -331,7 +331,7 @@ function zeebeInputProperties(moddle, source, target, parent) {
 
     let elementProperties = {
         source: '\"' + source + '\"',
-        target: '\"' + target + '\"',
+        target: target,
     };
 
     const input = moddle.create(elementName, elementProperties);
