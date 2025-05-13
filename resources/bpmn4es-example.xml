@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:task 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+xmlns:bpmn4es="https://github.com/michel-medema/BPMN4ES"
+xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL https://www.omg.org/spec/BPMN/20100501/BPMN20.xsd BPMN4ES https://github.com/michel-medema/BPMN4ES/blob/main/resources/BPMN4ES.xsd" 
+>
+  <bpmn:extensionElements>
+    <bpmn4es:keyEnvironmentalIndicators>
+        <bpmn4es:totalEnergy unit="kwh"></bpmn4es:totalEnergy>
+        <bpmn4es:waterConsumption unit="m3"></bpmn4es:waterConsumption>
+    </bpmn4es:keyEnvironmentalIndicators>
+  </bpmn:extensionElements>
+</bpmn:task>

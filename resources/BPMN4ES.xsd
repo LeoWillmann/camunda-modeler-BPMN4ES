@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:bpmn4es="BPMN4ES" targetNamespace="BPMN4ES" elementFormDefault="qualified" attributeFormDefault="unqualified">
+    <xsd:complexType name="kei" abstract="true">
+        <xsd:attribute name="unit" type="xsd:string" use="required" />
+        <xsd:attribute name="targetValue" type="xsd:float" use="optional"/>
+    </xsd:complexType>
+
+    <xsd:element name="keyEnvironmentalIndicators" type="bpmn4es:environmentalIndicators" />
+    <xsd:complexType name="environmentalIndicators">
+        <xsd:sequence>
+            <xsd:group ref="bpmn4es:energyIndicators"/>
+            <xsd:group ref="bpmn4es:waterIndicators"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:group name="energyIndicators">
+        <xsd:sequence>
+            <xsd:element name="totalEnergy" type="bpmn4es:kei" minOccurs="0" />
+            <xsd:element name="renewableEnergy" type="bpmn4es:kei" minOccurs="0" />
+            <xsd:element name="nonRenewableEnergy" type="bpmn4es:kei" minOccurs="0" />
+            <xsd:element name="indoorEnergy" type="bpmn4es:kei" minOccurs="0" />
+            <xsd:element name="transportEnergy" type="bpmn4es:kei" minOccurs="0" />
+        </xsd:sequence>
+    </xsd:group>
+
+    <xsd:group name="waterIndicators">
+        <xsd:sequence>
+            <xsd:element name="waterWithdrawal" type="bpmn4es:kei" minOccurs="0" />
+            <xsd:element name="nonConsumptiveWaterUse" type="bpmn4es:kei" minOccurs="0" />
+            <xsd:element name="waterConsumption" type="bpmn4es:kei" minOccurs="0" />
+            <xsd:element name="waterPollution" type="bpmn4es:kei" minOccurs="0" />
+        </xsd:sequence>
+    </xsd:group>
+</xsd:schema>
