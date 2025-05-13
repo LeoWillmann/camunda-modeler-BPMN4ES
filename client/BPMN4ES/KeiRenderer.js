@@ -27,12 +27,9 @@ export default class KeiRenderer extends BaseRenderer {
 
   canRender(element) {
     const businessObject = getBusinessObject(element);
-    console.log("businessObject {}", businessObject);
 
-    // only render tasks and subprocesses with KEIs.
+    // only render elements with KEIs.
     return (
-      isAny(element, ["bpmn:Task", "bpmn:SubProcess"]) &&
-      !element.labelTarget &&
       hasExtensionElement(businessObject, "bpmn4es:environmentalIndicators")
     );
   }

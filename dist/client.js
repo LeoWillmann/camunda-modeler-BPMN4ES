@@ -39,7 +39,7 @@ class KeiContextPad {
 
   getContextPadEntries(element) {
     // Only add the KEI menu item for tasks and subprocesses.
-	//TODO bpmn has service tasks, script tasks, etc.
+    //TODO bpmn has service tasks, script tasks, etc.
     // if ( isAny(element, [ 'bpmn:Task', 'bpmn:SubProcess' ]) ) { 
     if (true) {
       //if ( is(businessObject, 'bpmn:Task') || is(businessObject, 'bpmn:SubProcess') ) {
@@ -112,149 +112,215 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const INDICATORS = [
-  {
-    category: "energy",
-    indicators: [
-      {
-        name: "Energy Consumption",
-        id: "energy-consumption",
-        icon_name: "bolt",
-        unit: "kwh",
-      },
-      {
-        name: "Renewable Energy",
-        id: "renewable-energy",
-        icon_name: "sunny",
-        unit: "kwh",
-      },
-      {
-        name: "Transportation Energy",
-        id: "transportation-energy",
-        icon_name: "local_shipping",
-        unit: "kwh",
-      },
-    ],
-  },
-  {
-    category: "emissions",
-    indicators: [
-      {
-        name: "Carbon Emissions",
-        id: "carbon-emissions",
-        icon_name: "co2",
-        unit: "kg",
-      },
-    ],
-  },
-  {
-    category: "waste",
-    indicators: [
-      {
-        name: "Recyclable Waste",
-        id: "recyclable-waste",
-        icon_name: "recycling",
-        unit: "kg",
-      },
-    ],
-  },
+    {
+        category: "energy",
+        indicators: [
+            {
+                name: "Energy Consumption",
+                id: "energy-consumption",
+                icon_name: "bolt",
+                unit: "kwh",
+                data: '{\"max\": 100}'
+            },
+            {
+                name: "Renewable Energy",
+                id: "renewable-energy",
+                icon_name: "sunny",
+                unit: "kwh",
+                data: '{\"max\": 100}'
+            },
+            {
+                name: "Transportation Energy",
+                id: "transportation-energy",
+                icon_name: "local_shipping",
+                unit: "kwh",
+                data: '{\"max\": 100}'
+            },
+        ],
+    },
+    {
+        category: "emissions",
+        indicators: [
+            {
+                name: "Carbon Emissions",
+                id: "carbon-emissions",
+                icon_name: "co2",
+                unit: "kg",
+                data: '{\"max\": 100}'
+            },
+        ],
+    },
+    {
+        category: "waste",
+        indicators: [
+            {
+                name: "Recyclable Waste",
+                id: "recyclable-waste",
+                icon_name: "recycling",
+                unit: "kg",
+                data: '{\"max\": 100}'
+            },
+        ],
+    },
 ];
 
 function KeiMenuProvider(
-  popupMenu,
-  modeling,
-  moddle,
-  translate
+    popupMenu,
+    modeling,
+    moddle,
+    translate
 ) {
-  this._popupMenu = popupMenu;
-  this._modeling = modeling;
-  this._translate = translate;
-  this._moddle = moddle;
+    this._popupMenu = popupMenu;
+    this._modeling = modeling;
+    this._translate = translate;
+    this._moddle = moddle;
 
-  this._indicators = INDICATORS;
+    this._indicators = INDICATORS;
 
-  this._popupMenu.registerProvider("kei-selector", this);
+    this._popupMenu.registerProvider("kei-selector", this);
 }
 
-KeiMenuProvider.$inject = ["popupMenu", "modeling", "moddle", "translate"];
+KeiMenuProvider.$inject = [
+    "popupMenu",
+    "modeling",
+    "moddle",
+    "translate"
+];
 
 KeiMenuProvider.prototype.getEntries = function (target) {
-  const self = this;
+    const self = this;
 
-  const entries = self._indicators.flatMap(function (indicator) {
-    const category = indicator.category;
+    const entries = self._indicators.flatMap(function (indicator) {
+        const category = indicator.category;
 
-    return indicator.indicators.map(function (indicator) {
-      return {
-        title: self._translate(indicator.name),
-        label: self._translate(indicator.name),
-        className: "kei-icon kei-icon-" + indicator.id,
-        id: indicator.id,
-        group: category,
-        action: createAction(self._moddle, self._modeling, target, indicator),
-      };
+        return indicator.indicators.map(function (indicator) {
+            return {
+                title: self._translate(indicator.name),
+                label: self._translate(indicator.name),
+                className: "kei-icon kei-icon-" + indicator.id,
+                id: indicator.id,
+                group: category,
+                action: createAction(self._moddle, self._modeling, target, indicator),
+            };
+        });
     });
-  });
 
-  return entries;
+    return entries;
 };
 
 // TODO: These values should be set through a properties panel.
 function createAction(moddle, modeling, target, indicator) {
-  return function (event, entry) {
-    console.log(target);
+    return function (event, entry) {
+        console.log(target);
 
-    // INFO: prompt() not supported in camunda modeler
-    // let targetValue = prompt(`Enter the target value for ${indicator.name} (leave empty if only monitored)`);
-    let targetValue = 0;
-    const enforced =
-      !isNaN(parseFloat(targetValue)) &&
-      Number(targetValue) == parseFloat(targetValue);
+        // INFO: prompt() not supported in camunda modeler
+        // let targetValue = prompt(`Enter the target value for ${indicator.name} (leave empty if only monitored)`);
+        let targetValue = 0;
 
-    let keiProperties = {
-      id: indicator.id,
-      unit: indicator.unit,
-      icon: indicator.icon_name,
+        // adds BPMN4ES XML
+        addBPMN4ES(moddle, modeling, target, indicator, targetValue);
+
+        // adds Zeebe engine variables
+        addZeebeVariables(moddle, modeling, target, indicator, targetValue);
     };
+}
 
-    if (enforced) {
-      // If enforced is true here, it should be ensured that the target value is a valid floating point number.
-      keiProperties.targetValue = parseFloat(targetValue);
-    }
+function addBPMN4ES(moddle, modeling, target, indicator, targetValue) {
+    let keiProperties = {
+        id: indicator.id,
+        unit: indicator.unit,
+        icon: indicator.icon_name,
+        targetValue: targetValue
+    };
 
     const businessObject = (0,bpmn_js_lib_util_ModelUtil__WEBPACK_IMPORTED_MODULE_1__.getBusinessObject)(target);
     const extensionElements =
-      businessObject.extensionElements ||
-      moddle.create("bpmn:ExtensionElements");
+        businessObject.extensionElements ||
+        moddle.create("bpmn:ExtensionElements");
 
     let environmentalIndicators = (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.getExtensionElement)(
-      businessObject,
-      "bpmn4es:environmentalIndicators"
+        businessObject,
+        "bpmn4es:environmentalIndicators"
     );
 
     if (!environmentalIndicators) {
-      environmentalIndicators = moddle.create(
-        "bpmn4es:environmentalIndicators"
-      );
-      environmentalIndicators.$parent = businessObject;
-      extensionElements.get("values").push(environmentalIndicators);
+        environmentalIndicators = moddle.create(
+            "bpmn4es:environmentalIndicators"
+        );
+        environmentalIndicators.$parent = businessObject;
+        extensionElements.get("values").push(environmentalIndicators);
     }
 
     // For now, only one indicator is allowed, so remove any existing ones before adding the new one.
     environmentalIndicators.get("indicators").length = 0;
 
     const kei = moddle.create(
-      "bpmn4es:keyEnvironmentalIndicator",
-      keiProperties
+        "bpmn4es:keyEnvironmentalIndicator",
+        keiProperties
     );
     kei.$parent = environmentalIndicators;
     environmentalIndicators.get("indicators").push(kei);
 
     modeling.updateProperties(target, {
-      extensionElements,
+        extensionElements,
     });
-  };
 }
 
+function addZeebeVariables(moddle, modeling, target, indicator, targetValue) {
+    console.log("moddle", moddle);
+    const ZEEBE_IOMAP = "zeebe:IoMapping";
+    const ZEEBE_INPUT = "inputParameters";
+    const TYPE = "__customMetricsType";
+    const DATA = "__customMetricsData";
+    const TARGET = "__customMetricsTarget";
+
+    // get or create extensionElements of the target element
+    const businessObject = (0,bpmn_js_lib_util_ModelUtil__WEBPACK_IMPORTED_MODULE_1__.getBusinessObject)(target);
+    const extensionElements = businessObject.extensionElements || moddle.create("bpmn:ExtensionElements");
+
+    // get or create Zeebe input variables extensionElement
+    console.log
+    let ioMap = (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.getExtensionElement)(
+        businessObject,
+        ZEEBE_IOMAP
+    );
+
+    if (!ioMap) {
+        ioMap = moddle.create(ZEEBE_IOMAP);
+        ioMap.$parent = businessObject;
+        extensionElements.get("values").push(ioMap);
+    }
+
+    // remove variable data of names we want to add.
+    const inputArray = ioMap.get(ZEEBE_INPUT);
+
+    inputArray.pop(inputArray.findIndex((element) => element.target == TYPE));
+    inputArray.pop(inputArray.findIndex((element) => element.target == DATA));
+    inputArray.pop(inputArray.findIndex((element) => element.target == TARGET));
+
+    inputArray.push(zeebeInputProperties(moddle, indicator.id, TYPE, ioMap));
+    inputArray.push(zeebeInputProperties(moddle, indicator.data, DATA, ioMap));
+    inputArray.push(zeebeInputProperties(moddle, targetValue, TARGET, ioMap));
+
+    // update element properties
+    modeling.updateProperties(target, {
+        extensionElements,
+    });
+}
+
+function zeebeInputProperties(moddle, source, target, ioMap) {
+    const ZEEBE_INPUT = "zeebe:Input";
+
+    let inputProperties = {
+        source: '\"' + source + '\"',
+        target: '\"' + target + '\"',
+    };
+
+    const input = moddle.create(ZEEBE_INPUT, inputProperties);
+    input.$parent = ioMap;
+
+    return input;
+}
 
 /***/ }),
 
@@ -271,7 +337,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var diagram_js_lib_draw_BaseRenderer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! diagram-js/lib/draw/BaseRenderer */ "./node_modules/diagram-js/lib/draw/BaseRenderer.js");
 /* harmony import */ var tiny_svg__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! tiny-svg */ "./node_modules/tiny-svg/dist/index.esm.js");
 /* harmony import */ var bpmn_js_lib_draw_BpmnRenderUtil__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! bpmn-js/lib/draw/BpmnRenderUtil */ "./node_modules/bpmn-js/lib/draw/BpmnRenderUtil.js");
-/* harmony import */ var bpmn_js_lib_util_ModelUtil__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! bpmn-js/lib/features/modeling/util/ModelingUtil */ "./node_modules/bpmn-js/lib/util/ModelUtil.js");
+/* harmony import */ var bpmn_js_lib_util_ModelUtil__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! bpmn-js/lib/util/ModelUtil */ "./node_modules/bpmn-js/lib/util/ModelUtil.js");
 /* harmony import */ var _util_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util.js */ "./client/BPMN4ES/util.js");
 
 
@@ -298,12 +364,9 @@ class KeiRenderer extends diagram_js_lib_draw_BaseRenderer__WEBPACK_IMPORTED_MOD
 
   canRender(element) {
     const businessObject = (0,bpmn_js_lib_util_ModelUtil__WEBPACK_IMPORTED_MODULE_2__.getBusinessObject)(element);
-    console.log("businessObject {}", businessObject);
 
-    // only render tasks and subprocesses with KEIs.
+    // only render elements with KEIs.
     return (
-      (0,bpmn_js_lib_util_ModelUtil__WEBPACK_IMPORTED_MODULE_2__.isAny)(element, ["bpmn:Task", "bpmn:SubProcess"]) &&
-      !element.labelTarget &&
       (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.hasExtensionElement)(businessObject, "bpmn4es:environmentalIndicators")
     );
   }
