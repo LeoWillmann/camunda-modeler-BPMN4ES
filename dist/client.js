@@ -34,12 +34,10 @@ class KeiContextPad {
       this._autoPlace = injector.get("autoPlace", false);
     }
 
-    console.log("In the context pad constructor");
     contextPad.registerProvider(this);
   }
 
   getContextPadEntries(element) {
-    console.log("getContextPadEntries", this._contextPad, this._popupMenu);
     // Only add the KEI menu item for tasks and subprocesses.
 	//TODO bpmn has service tasks, script tasks, etc.
     // if ( isAny(element, [ 'bpmn:Task', 'bpmn:SubProcess' ]) ) { 
@@ -51,7 +49,7 @@ class KeiContextPad {
       return {
         "add.kei": {
           group: "kei",
-          className: "kei-icon-leaf",
+          className: "kei-icon kei-icon-leaf",
           title: translate("Assign KEI"),
           html: '<div class="entry">!h</div>',
           action: {
@@ -296,7 +294,6 @@ class KeiRenderer extends diagram_js_lib_draw_BaseRenderer__WEBPACK_IMPORTED_MOD
     super(eventBus, HIGH_PRIORITY);
     this.bpmnRenderer = bpmnRenderer;
     this.customContextPad = KeiContextPad; // Store the CustomContextPad instance
-    console.log("In the KEI renderer constructor");
   }
 
   canRender(element) {
@@ -3157,6 +3154,16 @@ function merge(target, ...sources) {
 
 
 
+/***/ }),
+
+/***/ "./resources/bpmn4es.json":
+/*!********************************!*\
+  !*** ./resources/bpmn4es.json ***!
+  \********************************/
+/***/ ((module) => {
+
+module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://unpkg.com/moddle/resources/schema/moddle.json","name":"BPMN4ES","uri":"https://github.com/michel-medema/BPMN4ES","prefix":"bpmn4es","xml":{"tagAlias":"lowerCase"},"types":[{"name":"keyEnvironmentalIndicator","properties":[{"name":"id","isAttr":true,"type":"String"},{"name":"unit","isAttr":true,"type":"String"},{"name":"targetValue","isAttr":true,"type":"Real"},{"name":"icon","isAttr":true,"type":"String"}]},{"name":"environmentalIndicators","superClass":["Element"],"properties":[{"name":"indicators","isMany":true,"type":"keyEnvironmentalIndicator"}]}],"enumerations":[],"associations":[]}');
+
 /***/ })
 
 /******/ 	});
@@ -3222,12 +3229,17 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var camunda_modeler_plugin_helpers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! camunda-modeler-plugin-helpers */ "./node_modules/camunda-modeler-plugin-helpers/index.js");
 /* harmony import */ var _BPMN4ES_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./BPMN4ES/index.js */ "./client/BPMN4ES/index.js");
-
-
-
+/* harmony import */ var _resources_bpmn4es_json__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../resources/bpmn4es.json */ "./resources/bpmn4es.json");
 
 // Register a plugin for bpmn-js
+
+
 (0,camunda_modeler_plugin_helpers__WEBPACK_IMPORTED_MODULE_0__.registerBpmnJSPlugin)(_BPMN4ES_index_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
+
+// register moddle extension
+
+
+(0,camunda_modeler_plugin_helpers__WEBPACK_IMPORTED_MODULE_0__.registerBpmnJSModdleExtension)(_resources_bpmn4es_json__WEBPACK_IMPORTED_MODULE_2__);
 
 /******/ })()
 ;

@@ -20,12 +20,10 @@ export default class KeiContextPad {
       this._autoPlace = injector.get("autoPlace", false);
     }
 
-    console.log("In the context pad constructor");
     contextPad.registerProvider(this);
   }
 
   getContextPadEntries(element) {
-    console.log("getContextPadEntries", this._contextPad, this._popupMenu);
     // Only add the KEI menu item for tasks and subprocesses.
 	//TODO bpmn has service tasks, script tasks, etc.
     // if ( isAny(element, [ 'bpmn:Task', 'bpmn:SubProcess' ]) ) { 
@@ -37,7 +35,7 @@ export default class KeiContextPad {
       return {
         "add.kei": {
           group: "kei",
-          className: "kei-icon-leaf",
+          className: "kei-icon kei-icon-leaf",
           title: translate("Assign KEI"),
           html: '<div class="entry">!h</div>',
           action: {

@@ -23,7 +23,6 @@ export default class KeiRenderer extends BaseRenderer {
     super(eventBus, HIGH_PRIORITY);
     this.bpmnRenderer = bpmnRenderer;
     this.customContextPad = KeiContextPad; // Store the CustomContextPad instance
-    console.log("In the KEI renderer constructor");
   }
 
   canRender(element) {
