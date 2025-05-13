@@ -160,6 +160,9 @@ function addZeebeVariables(moddle, modeling, target, indicator, targetValue) {
     console.log("moddle", moddle);
     const ZEEBE_IOMAP = "zeebe:IoMapping";
     const ZEEBE_INPUT = "inputParameters";
+    const ZEEBE_EXECUTION_LISTENERS = "zeebe:ExecutionListeners";
+    const ZEEBE_LISTENER = "listeners";
+    const QUERY_WORKER = "custom-metrics_query";
     const TYPE = "__customMetricsType";
     const DATA = "__customMetricsData";
     const TARGET = "__customMetricsTarget";
@@ -169,7 +172,6 @@ function addZeebeVariables(moddle, modeling, target, indicator, targetValue) {
     const extensionElements = businessObject.extensionElements || moddle.create("bpmn:ExtensionElements");
 
     // get or create Zeebe input variables extensionElement
-    console.log
     let ioMap = getExtensionElement(
         businessObject,
         ZEEBE_IOMAP
@@ -182,15 +184,31 @@ function addZeebeVariables(moddle, modeling, target, indicator, targetValue) {
     }
 
     // remove variable data of names we want to add.
-    const inputArray = ioMap.get(ZEEBE_INPUT);
-
+    let inputArray = ioMap.get(ZEEBE_INPUT);
     inputArray.pop(inputArray.findIndex((element) => element.target == TYPE));
     inputArray.pop(inputArray.findIndex((element) => element.target == DATA));
     inputArray.pop(inputArray.findIndex((element) => element.target == TARGET));
 
+    // push variables to input array
     inputArray.push(zeebeInputProperties(moddle, indicator.id, TYPE, ioMap));
     inputArray.push(zeebeInputProperties(moddle, indicator.data, DATA, ioMap));
     inputArray.push(zeebeInputProperties(moddle, targetValue, TARGET, ioMap));
+
+    // add Zeebe execution listener
+    let executionListener = getExtensionElement(
+        businessObject,
+        ZEEBE_EXECUTION_LISTENERS
+    );
+
+    if (!executionListener) {
+        executionListener = moddle.create(ZEEBE_EXECUTION_LISTENERS);
+        executionListener.$parent = businessObject;
+        extensionElements.get("values").push(executionListener);
+    }
+
+    inputArray = executionListener.get(ZEEBE_LISTENER);
+    inputArray.pop(inputArray.findIndex((element) => element.type == QUERY_WORKER));
+    inputArray.push(zeebeExecutionListenerProperties(moddle, QUERY_WORKER, executionListener));
 
     // update element properties
     modeling.updateProperties(target, {
@@ -198,16 +216,30 @@ function addZeebeVariables(moddle, modeling, target, indicator, targetValue) {
     });
 }
 
-function zeebeInputProperties(moddle, source, target, ioMap) {
-    const ZEEBE_INPUT = "zeebe:Input";
+function zeebeInputProperties(moddle, source, target, parent) {
+    const elementName = "zeebe:Input";
 
-    let inputProperties = {
+    let elementProperties = {
         source: '\"' + source + '\"',
         target: '\"' + target + '\"',
     };
 
-    const input = moddle.create(ZEEBE_INPUT, inputProperties);
-    input.$parent = ioMap;
+    const input = moddle.create(elementName, elementProperties);
+    input.$parent = parent;
+
+    return input;
+}
+
+function zeebeExecutionListenerProperties(moddle, type, parent) {
+    const elementName = "zeebe:ExecutionListener";
+
+    let elementProperties = {
+        eventType: "end",
+        type: type,
+    };
+
+    const input = moddle.create(elementName, elementProperties);
+    input.$parent = parent;
 
     return input;
 }
