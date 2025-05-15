@@ -6,8 +6,6 @@
 'use strict';
 
 module.exports = {
-  name: 'Example Plug-in',
-  menu: './menu/menu.js',
-  style: './style/style.css',
+  name: 'BPMN4ES Camunda modeler plugin',
   script: './dist/client.js',
 };

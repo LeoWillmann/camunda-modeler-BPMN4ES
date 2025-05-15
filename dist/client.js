@@ -120,21 +120,21 @@ const INDICATORS = [
                 id: "energy-consumption",
                 icon_name: "bolt",
                 unit: "kwh",
-                data: '{\"max\": 100}'
+                data: '{"max": 100}'
             },
             {
                 name: "Renewable Energy",
                 id: "renewable-energy",
                 icon_name: "sunny",
                 unit: "kwh",
-                data: '{\"max\": 100}'
+                data: '{"max": 100}'
             },
             {
                 name: "Transportation Energy",
                 id: "transportation-energy",
                 icon_name: "local_shipping",
                 unit: "kwh",
-                data: '{\"max\": 100}'
+                data: '{"max": 100}'
             },
         ],
     },
@@ -146,7 +146,7 @@ const INDICATORS = [
                 id: "carbon-emissions",
                 icon_name: "co2",
                 unit: "kg",
-                data: '{\"max\": 100}'
+                data: '{"max": 100}'
             },
         ],
     },
@@ -158,7 +158,7 @@ const INDICATORS = [
                 id: "recyclable-waste",
                 icon_name: "recycling",
                 unit: "kg",
-                data: '{\"max\": 100}'
+                data: '{"max": 100}'
             },
         ],
     },
@@ -300,8 +300,8 @@ function addZeebeVariables(moddle, modeling, target, indicator, targetValue) {
     inputArray.pop(inputArray.findIndex((element) => element.target == TARGET));
 
     // push variables to input array
-    inputArray.push(zeebeInputProperties(moddle, indicator.id, TYPE, ioMap));
-    inputArray.push(zeebeInputProperties(moddle, indicator.data, DATA, ioMap));
+    inputArray.push(zeebeInputProperties(moddle, JSON.stringify(indicator.id), TYPE, ioMap));
+    inputArray.push(zeebeInputProperties(moddle, JSON.stringify(indicator.data), DATA, ioMap));
     inputArray.push(zeebeInputProperties(moddle, targetValue, TARGET, ioMap));
 
     // add Zeebe execution listener
@@ -330,7 +330,7 @@ function zeebeInputProperties(moddle, source, target, parent) {
     const elementName = "zeebe:Input";
 
     let elementProperties = {
-        source: '\"' + source + '\"',
+        source: '=' + source,
         target: target,
     };
 
