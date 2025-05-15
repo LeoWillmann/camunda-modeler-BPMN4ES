@@ -25,10 +25,7 @@ export default class KeiContextPad {
 
   getContextPadEntries(element) {
     // Only add the KEI menu item for tasks and subprocesses.
-    //TODO bpmn has service tasks, script tasks, etc.
-    // if ( isAny(element, [ 'bpmn:Task', 'bpmn:SubProcess' ]) ) { 
-    if (true) {
-      //if ( is(businessObject, 'bpmn:Task') || is(businessObject, 'bpmn:SubProcess') ) {
+    if (isAny(element, ['bpmn:Task', 'bpmn:SubProcess'])) {
       const translate = this._translate;
       const contextPad = this._contextPad;
       const popupMenu = this._popupMenu;

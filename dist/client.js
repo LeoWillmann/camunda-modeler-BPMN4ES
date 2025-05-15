@@ -12,6 +12,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ KeiContextPad)
 /* harmony export */ });
+/* harmony import */ var bpmn_js_lib_features_modeling_util_ModelingUtil__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bpmn-js/lib/features/modeling/util/ModelingUtil */ "./node_modules/bpmn-js/lib/util/ModelUtil.js");
 
 
 class KeiContextPad {
@@ -39,10 +40,7 @@ class KeiContextPad {
 
   getContextPadEntries(element) {
     // Only add the KEI menu item for tasks and subprocesses.
-    //TODO bpmn has service tasks, script tasks, etc.
-    // if ( isAny(element, [ 'bpmn:Task', 'bpmn:SubProcess' ]) ) { 
-    if (true) {
-      //if ( is(businessObject, 'bpmn:Task') || is(businessObject, 'bpmn:SubProcess') ) {
+    if ((0,bpmn_js_lib_features_modeling_util_ModelingUtil__WEBPACK_IMPORTED_MODULE_0__.isAny)(element, ['bpmn:Task', 'bpmn:SubProcess'])) {
       const translate = this._translate;
       const contextPad = this._contextPad;
       const popupMenu = this._popupMenu;
@@ -66,7 +64,9 @@ class KeiContextPad {
           },
         },
       };
-    } else {}
+    } else {
+      return {};
+    }
   }
 }
 
