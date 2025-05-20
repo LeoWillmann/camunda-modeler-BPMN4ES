@@ -6,6 +6,9 @@ This plugin serves as a modeler interface to model with key environmental indica
 
 The source of the BPMN4ES implementation is from [michel-medema/BPMN4ES](https://github.com/michel-medema/BPMN4ES) and has only been changed make it compatible in the camunda modeler plugin environment and work with the Zeebe engine.
 
+## Prerequisites
+- [Camunda 8 Desktop Modeler](https://docs.camunda.io/docs/components/modeler/desktop-modeler/)
+
 ## What it does
 The plugin adds a context menu option for bpmn tasks which allow the user to select a key environmental indicator to monitor for the given task. To monitor the values, the plugin automatically adds `Zeebe input variables` and `execution listener` with defined data in [KeiMenuProvider.js](client/BPMN4ES/KeiMenuProvider.js).
 
@@ -13,21 +16,30 @@ The plugin adds a context menu option for bpmn tasks which allow the user to sel
 
 The monitoring requires a `job worker` of the given name in [KeiMenuProvider.js](client\BPMN4ES\KeiMenuProvider.js) which can process the provided Zeebe input variable data. The [camunda-zeebe-BPMN4ES](https://github.com/rug-student/camunda-zeebe-BPMN4ES) github repository provides a java spring boot template to work with.
 
-## Development Setup
+## Install the plugin
 
-Use [npm](https://www.npmjs.com/), the [Node.js](https://nodejs.org/en/) package manager to download and install required dependencies, verified to be working with npm 10.9.2 and node v22.15.1 (lts).
-
-```sh
-npm install
-```
-
-To make the Camunda Modeler aware of your plugin you must link the plugin to the [Camunda Modeler plugin directory](https://docs.camunda.io/docs/components/modeler/desktop-modeler/plugins/#plugging-into-camunda-modeler) via a symbolic link.
-Available utilities to do that are [`mklink /d`](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/mklink) on Windows and [`ln -s`](https://linux.die.net/man/1/ln) on MacOS / Linux.
+To make the Camunda Modeler aware of your plugin you must store or link the plugin to the [Camunda Modeler plugin directory](https://docs.camunda.io/docs/components/modeler/desktop-modeler/plugins/#plugging-into-camunda-modeler). 
+Available utilities to create a symbolic link are [`mklink /d`](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/mklink) on Windows and [`ln -s`](https://linux.die.net/man/1/ln) on MacOS / Linux.
 
 Re-start the app in order to recognize the newly linked plugin.
 
 Warning: Make sure that the file path of the plugin does not contain any special characters such as `()`. It has shown to not load the plugins properly.
 
+## Development
+
+### Prerequisites
+- [Node.js](https://nodejs.org/en/)
+- [npm](https://www.npmjs.com/) package manager to download and install required node.js dependencies
+
+Verified to be working with node v22.15.1 (lts) and npm 10.9.2.
+
+### Setup
+
+Install node dependencies
+
+```sh
+npm install
+```
 
 ## Building the Plugin
 
