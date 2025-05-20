@@ -1,13 +1,21 @@
-# Camunda Modeler Plugin Example
+# Camunda Modeler BPMN4ES Plugin
 
 ![Compatible with Camunda Modeler version 5](https://img.shields.io/badge/Modeler_Version-5.0.0+-blue.svg) ![Plugin Type](https://img.shields.io/badge/Plugin%20Type-BPMN-orange.svg) 
 
-This example serves as a starting point for creating your own plugin for the [Camunda Modeler](https://github.com/camunda/camunda-modeler).
+This plugin serves as a modeler interface to model with key environmental indicators such as emissions and energy consumption and has been developed with the help of [camunda-modeler-plugin-example](https://github.com/camunda/camunda-modeler-plugin-example) template.
 
+The source of the BPMN4ES implementation is from [michel-medema/BPMN4ES](https://github.com/michel-medema/BPMN4ES) and has only been changed make it compatible in the camunda modeler plugin environment and work with the Zeebe engine.
+
+## What it does
+The plugin adds a context menu option for bpmn tasks which allow the user to select a key environmental indicator to monitor for the given task. To monitor the values, the plugin automatically adds `Zeebe input variables` and `execution listener` with defined data in [KeiMenuProvider.js](client\BPMN4ES\KeiMenuProvider.js).
+
+## How to monitor
+
+The monitoring requires a `job worker` of the given name in [KeiMenuProvider.js](client\BPMN4ES\KeiMenuProvider.js) which can process the provided Zeebe input variable data. The [camunda-zeebe-BPMN4ES](https://github.com/rug-student/camunda-zeebe-BPMN4ES) github repository provides a java spring boot template to work with.
 
 ## Development Setup
 
-Use [npm](https://www.npmjs.com/), the [Node.js](https://nodejs.org/en/) package manager to download and install required dependencies:
+Use [npm](https://www.npmjs.com/), the [Node.js](https://nodejs.org/en/) package manager to download and install required dependencies, verified to be working with npm 10.9.2 and node v22.15.1 (lts).
 
 ```sh
 npm install
@@ -17,6 +25,8 @@ To make the Camunda Modeler aware of your plugin you must link the plugin to the
 Available utilities to do that are [`mklink /d`](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/mklink) on Windows and [`ln -s`](https://linux.die.net/man/1/ln) on MacOS / Linux.
 
 Re-start the app in order to recognize the newly linked plugin.
+
+Warning: Make sure that the file path of the plugin does not contain any special characters such as `()`. It has shown to not load the plugins properly.
 
 
 ## Building the Plugin
@@ -35,30 +45,6 @@ To prepare the plugin for release, executing all necessary steps, run:
 ```sh
 npm run all
 ```
-
-
-## Before you Publish
-
-* [ ] Clearly state which Camunda Modeler version your plugin is compatible with and which type of plugin it is by changing the badges at the top of this README. See [best-practice examples below](#badges-to-indicate-typical-plugin-types).
-* [ ] Ensure you renamed the [bpmn-js extension](./client/bpmn-js-extension/index.js#L17) from `PLEASE_CHANGE_ME` to something unique
-* [ ] Ensure you've removed the menu and style folders as well as their references in `./index.js` if you do not need them
-
-
-### Badges to indicate typical plugin types
-
-| Badge | Markdown |
-|-|-|
-|[![Plugin Type](https://img.shields.io/badge/Plugin_Type-BPMN-orange.svg)](#)|`[![Plugin Type](https://img.shields.io/badge/Plugin_Type-BPMN-orange.svg)](#)`|
-|[![Plugin Type](https://img.shields.io/badge/Plugin_Type-BPMN_(Camunda_Platform_7)-orange.svg)](#)|`[![Plugin Type](https://img.shields.io/badge/Plugin_Type-BPMN_(Camunda_Platform_7)-orange.svg)](#)`|
-|[![Plugin Type](https://img.shields.io/badge/Plugin_Type-BPMN_(Camunda_Platform_8)-orange.svg)](#)|`[![Plugin Type](https://img.shields.io/badge/Plugin_Type-BPMN_(Camunda_Platform_8)-orange.svg)](#)`|
-|[![Plugin Type](https://img.shields.io/badge/Plugin_Type-BPMN_Moddle-orange.svg)](#)|`[![Plugin Type](https://img.shields.io/badge/Plugin_Type-BPMN_Moddle-orange.svg)](#)`|
-|[![Plugin Type](https://img.shields.io/badge/Plugin_Type-BPMN_Moddle_(Camunda_Platform_7)-orange.svg)](#)|`[![Plugin Type](https://img.shields.io/badge/Plugin_Type-BPMN_Moddle_(Camunda_Platform_7)-orange.svg)](#)`|
-|[![Plugin Type](https://img.shields.io/badge/Plugin_Type-BPMN_Moddle_(Camunda_Platform_8)-orange.svg)](#)|`[![Plugin Type](https://img.shields.io/badge/Plugin_Type-BPMN_Moddle_(Camunda_Platform_8)-orange.svg)](#)`|
-|[![Plugin Type](https://img.shields.io/badge/Plugin_Type-DMN-orange.svg)](#)|`[![Plugin Type](https://img.shields.io/badge/Plugin_Type-DMN-orange.svg)](#)`|
-|[![Plugin Type](https://img.shields.io/badge/Plugin_Type-DMN_Moddle-orange.svg)](#)|`[![Plugin Type](https://img.shields.io/badge/Plugin_Type-DMN_Moddle-orange.svg)](#)`|
-|[![Plugin Type](https://img.shields.io/badge/Plugin_Type-React-orange.svg)](#)|`[![Plugin Type](https://img.shields.io/badge/Plugin_Type-React-orange.svg)](#)`|
-|[![Plugin Type](https://img.shields.io/badge/Plugin_Type-Styles-orange.svg)](#)|`[![Plugin Type](https://img.shields.io/badge/Plugin_Type-Styles-orange.svg)](#)`|
-|[![Plugin Type](https://img.shields.io/badge/Plugin_Type-Menu-orange.svg)](#)|`[![Plugin Type](https://img.shields.io/badge/Plugin_Type-Menu-orange.svg)](#)`|
 
 ## Additional Resources
 
