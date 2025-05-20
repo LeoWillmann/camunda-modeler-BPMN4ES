@@ -7,7 +7,7 @@ This plugin serves as a modeler interface to model with key environmental indica
 The source of the BPMN4ES implementation is from [michel-medema/BPMN4ES](https://github.com/michel-medema/BPMN4ES) and has only been changed make it compatible in the camunda modeler plugin environment and work with the Zeebe engine.
 
 ## What it does
-The plugin adds a context menu option for bpmn tasks which allow the user to select a key environmental indicator to monitor for the given task. To monitor the values, the plugin automatically adds `Zeebe input variables` and `execution listener` with defined data in [KeiMenuProvider.js](client\BPMN4ES\KeiMenuProvider.js).
+The plugin adds a context menu option for bpmn tasks which allow the user to select a key environmental indicator to monitor for the given task. To monitor the values, the plugin automatically adds `Zeebe input variables` and `execution listener` with defined data in [KeiMenuProvider.js](client/BPMN4ES/KeiMenuProvider.js).
 
 ## How to monitor
 
