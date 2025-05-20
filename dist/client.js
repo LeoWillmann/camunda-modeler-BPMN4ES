@@ -106,8 +106,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ KeiMenuProvider)
 /* harmony export */ });
-/* harmony import */ var bpmn_js_lib_util_ModelUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! bpmn-js/lib/util/ModelUtil */ "./node_modules/bpmn-js/lib/util/ModelUtil.js");
+/* harmony import */ var bpmn_js_lib_util_ModelUtil__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! bpmn-js/lib/util/ModelUtil */ "./node_modules/bpmn-js/lib/util/ModelUtil.js");
 /* harmony import */ var _util_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util.js */ "./client/BPMN4ES/util.js");
+/* harmony import */ var _ZeebeElementExtension_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ZeebeElementExtension.js */ "./client/BPMN4ES/ZeebeElementExtension.js");
+
 
 
 
@@ -232,7 +234,7 @@ function createAction(moddle, modeling, target, indicator) {
         addBPMN4ES(moddle, modeling, target, indicator, targetValue);
 
         // adds Zeebe engine variables
-        addZeebeVariables(moddle, modeling, target, indicator, targetValue);
+        (0,_ZeebeElementExtension_js__WEBPACK_IMPORTED_MODULE_1__.addZeebeVariables)(moddle, modeling, target, indicator, targetValue);
     };
 }
 
@@ -244,7 +246,7 @@ function addBPMN4ES(moddle, modeling, target, indicator, targetValue) {
         targetValue: targetValue
     };
 
-    const businessObject = (0,bpmn_js_lib_util_ModelUtil__WEBPACK_IMPORTED_MODULE_1__.getBusinessObject)(target);
+    const businessObject = (0,bpmn_js_lib_util_ModelUtil__WEBPACK_IMPORTED_MODULE_2__.getBusinessObject)(target);
     const extensionElements =
         businessObject.extensionElements ||
         moddle.create("bpmn:ExtensionElements");
@@ -277,93 +279,6 @@ function addBPMN4ES(moddle, modeling, target, indicator, targetValue) {
     });
 }
 
-function addZeebeVariables(moddle, modeling, target, indicator, targetValue) {
-    console.log("moddle", moddle);
-    const ZEEBE_IOMAP = "zeebe:IoMapping";
-    const ZEEBE_INPUT = "inputParameters";
-    const ZEEBE_EXECUTION_LISTENERS = "zeebe:ExecutionListeners";
-    const ZEEBE_LISTENER = "listeners";
-    const QUERY_WORKER = "custom-metrics_query";
-    const TYPE = "__customMetricsType";
-    const DATA = "__customMetricsData";
-    const TARGET = "__customMetricsTarget";
-
-    // get or create extensionElements of the target element
-    const businessObject = (0,bpmn_js_lib_util_ModelUtil__WEBPACK_IMPORTED_MODULE_1__.getBusinessObject)(target);
-    const extensionElements = businessObject.extensionElements || moddle.create("bpmn:ExtensionElements");
-
-    // get or create Zeebe input variables extensionElement
-    let ioMap = (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.getExtensionElement)(
-        businessObject,
-        ZEEBE_IOMAP
-    );
-
-    if (!ioMap) {
-        ioMap = moddle.create(ZEEBE_IOMAP);
-        ioMap.$parent = businessObject;
-        extensionElements.get("values").push(ioMap);
-    }
-
-    // remove variable data of names we want to add.
-    let inputArray = ioMap.get(ZEEBE_INPUT);
-    inputArray.pop(inputArray.findIndex((element) => element.target == TYPE));
-    inputArray.pop(inputArray.findIndex((element) => element.target == DATA));
-    inputArray.pop(inputArray.findIndex((element) => element.target == TARGET));
-
-    // push variables to input array
-    inputArray.push(zeebeInputProperties(moddle, JSON.stringify(indicator.id), TYPE, ioMap));
-    inputArray.push(zeebeInputProperties(moddle, JSON.stringify(JSON.stringify(indicator.data)), DATA, ioMap));
-    inputArray.push(zeebeInputProperties(moddle, targetValue, TARGET, ioMap));
-
-    // add Zeebe execution listener
-    let executionListener = (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.getExtensionElement)(
-        businessObject,
-        ZEEBE_EXECUTION_LISTENERS
-    );
-
-    if (!executionListener) {
-        executionListener = moddle.create(ZEEBE_EXECUTION_LISTENERS);
-        executionListener.$parent = businessObject;
-        extensionElements.get("values").push(executionListener);
-    }
-
-    inputArray = executionListener.get(ZEEBE_LISTENER);
-    inputArray.pop(inputArray.findIndex((element) => element.type == QUERY_WORKER));
-    inputArray.push(zeebeExecutionListenerProperties(moddle, QUERY_WORKER, executionListener));
-
-    // update element properties
-    modeling.updateProperties(target, {
-        extensionElements,
-    });
-}
-
-function zeebeInputProperties(moddle, source, target, parent) {
-    const elementName = "zeebe:Input";
-
-    let elementProperties = {
-        source: '=' + source,
-        target: target,
-    };
-
-    const input = moddle.create(elementName, elementProperties);
-    input.$parent = parent;
-
-    return input;
-}
-
-function zeebeExecutionListenerProperties(moddle, type, parent) {
-    const elementName = "zeebe:ExecutionListener";
-
-    let elementProperties = {
-        eventType: "end",
-        type: type,
-    };
-
-    const input = moddle.create(elementName, elementProperties);
-    input.$parent = parent;
-
-    return input;
-}
 
 /***/ }),
 
@@ -539,6 +454,113 @@ class KeiRenderer extends diagram_js_lib_draw_BaseRenderer__WEBPACK_IMPORTED_MOD
 
 KeiRenderer.$inject = ["eventBus", "bpmnRenderer"];
 
+
+/***/ }),
+
+/***/ "./client/BPMN4ES/ZeebeElementExtension.js":
+/*!*************************************************!*\
+  !*** ./client/BPMN4ES/ZeebeElementExtension.js ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   addZeebeVariables: () => (/* binding */ addZeebeVariables)
+/* harmony export */ });
+/* harmony import */ var bpmn_js_lib_util_ModelUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! bpmn-js/lib/util/ModelUtil */ "./node_modules/bpmn-js/lib/util/ModelUtil.js");
+/* harmony import */ var _util_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util.js */ "./client/BPMN4ES/util.js");
+
+
+
+// Zeebe constants
+const MODDLE_ZEEBE_IOMAP = "zeebe:IoMapping";
+const MODDLE_ZEEBE_INPUT = "zeebe:Input";
+const MODDLE_ZEEBE_EXECUTION_LISTENERS = "zeebe:ExecutionListeners";
+const MODDLE_ZEEBE_EXECUTION_LISTENER = "zeebe:ExecutionListener";
+const ZEEBE_INPUT = "inputParameters";
+const ZEEBE_LISTENER = "listeners";
+
+// Job worker constant
+const QUERY_WORKER = "custom-metrics_query";
+// Variable name constants
+const TYPE = "__customMetricsType";
+const DATA = "__customMetricsData";
+const TARGET = "__customMetricsTarget";
+
+function addZeebeVariables(moddle, modeling, target, indicator, targetValue) {
+    // get or create extensionElements of the target element
+    const businessObject = (0,bpmn_js_lib_util_ModelUtil__WEBPACK_IMPORTED_MODULE_1__.getBusinessObject)(target);
+    const extensionElements = businessObject.extensionElements || moddle.create("bpmn:ExtensionElements");
+
+    // get or create Zeebe input variables extensionElement
+    let ioMap = (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.getExtensionElement)(
+        businessObject,
+        MODDLE_ZEEBE_IOMAP
+    );
+
+    if (!ioMap) {
+        ioMap = moddle.create(MODDLE_ZEEBE_IOMAP);
+        ioMap.$parent = businessObject;
+        extensionElements.get("values").push(ioMap);
+    }
+
+    // remove variable data of names we want to add.
+    let inputArray = ioMap.get(ZEEBE_INPUT);
+    inputArray.pop(inputArray.findIndex((element) => element.target == TYPE));
+    inputArray.pop(inputArray.findIndex((element) => element.target == DATA));
+    inputArray.pop(inputArray.findIndex((element) => element.target == TARGET));
+
+    // push variables to input array
+    inputArray.push(zeebeInputProperties(moddle, JSON.stringify(indicator.id), TYPE, ioMap));
+    inputArray.push(zeebeInputProperties(moddle, JSON.stringify(JSON.stringify(indicator.data)), DATA, ioMap));
+    inputArray.push(zeebeInputProperties(moddle, targetValue, TARGET, ioMap));
+
+    // add Zeebe execution listener
+    let executionListener = (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.getExtensionElement)(
+        businessObject,
+        MODDLE_ZEEBE_EXECUTION_LISTENERS
+    );
+
+    if (!executionListener) {
+        executionListener = moddle.create(MODDLE_ZEEBE_EXECUTION_LISTENERS);
+        executionListener.$parent = businessObject;
+        extensionElements.get("values").push(executionListener);
+    }
+
+    // remove possible old execution listener and push new one
+    inputArray = executionListener.get(ZEEBE_LISTENER);
+    inputArray.pop(inputArray.findIndex((element) => element.type == QUERY_WORKER));
+    inputArray.push(zeebeExecutionListenerProperties(moddle, QUERY_WORKER, executionListener));
+
+    // update element properties
+    modeling.updateProperties(target, {
+        extensionElements,
+    });
+}
+
+function zeebeInputProperties(moddle, source, target, parent) {
+    let elementProperties = {
+        source: '=' + source,
+        target: target,
+    };
+
+    const input = moddle.create(MODDLE_ZEEBE_INPUT, elementProperties);
+    input.$parent = parent;
+
+    return input;
+}
+
+function zeebeExecutionListenerProperties(moddle, type, parent) {
+    let elementProperties = {
+        eventType: "end",
+        type: type,
+    };
+
+    const input = moddle.create(MODDLE_ZEEBE_EXECUTION_LISTENER, elementProperties);
+    input.$parent = parent;
+
+    return input;
+}
 
 /***/ }),
 
