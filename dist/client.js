@@ -312,7 +312,6 @@ function addZeebeVariables(moddle, modeling, target, indicator, targetValue) {
 
     // push variables to input array
     inputArray.push(zeebeInputProperties(moddle, JSON.stringify(indicator.id), TYPE, ioMap));
-    inputArray.push(zeebeInputProperties(moddle, JSON.stringify(indicator.id), TYPE, ioMap));
     inputArray.push(zeebeInputProperties(moddle, JSON.stringify(JSON.stringify(indicator.data)), DATA, ioMap));
     inputArray.push(zeebeInputProperties(moddle, targetValue, TARGET, ioMap));
 
