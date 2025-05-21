@@ -14,7 +14,7 @@ The plugin adds a context menu option for bpmn tasks which allow the user to sel
 
 ## How to monitor
 
-The monitoring requires a `job worker` of the given name in [KeiMenuProvider.js](client\BPMN4ES\KeiMenuProvider.js) which can process the provided Zeebe input variable data. The [camunda-zeebe-BPMN4ES](https://github.com/rug-student/camunda-zeebe-BPMN4ES) github repository provides a java spring boot template to work with.
+The monitoring requires a `job worker` of the given name in [KeiMenuProvider.js](client\BPMN4ES\KeiMenuProvider.js) which can process the provided Zeebe input variable data. The [camunda-zeebe-BPMN4ES](https://github.com/LeoWillmann/camunda-zeebe-BPMN4ES) github repository provides a java spring boot template to work with.
 
 ## Install the plugin
 
@@ -41,7 +41,7 @@ Install node dependencies
 npm install
 ```
 
-## Building the Plugin
+### Building the Plugin
 
 You may spawn the development setup to watch source files and re-build the client plugin on changes:
 

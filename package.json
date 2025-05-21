@@ -1,7 +1,7 @@
 {
-  "name": "camunda-modeler-plugin-example",
-  "version": "3.1.0",
-  "description": "An example plugin for the Camunda Modeler",
+  "name": "camunda-modeler-BPMN4ES",
+  "version": "1.0.0",
+  "description": "A plugin to include kei environmental indicators in bpmn models.",
   "main": "index.js",
   "scripts": {
     "all": "run-s bundle",
@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/camunda/camunda-modeler-plugin-example.git"
+    "url": "git+https://github.com/LeoWillmann/camunda-modeler-BPMN4ES.git"
   },
   "keywords": [
     "camunda",
     "modeler",
     "plugin"
   ],
-  "author": "Philipp Fromme",
+  "author": "Leo Willmann",
   "license": "MIT",
   "devDependencies": {
     "camunda-modeler-plugin-helpers": "^5.0.0",
@@ -27,9 +27,7 @@
     "webpack-cli": "^5.0.1"
   },
   "dependencies": {
-    "bpmn-js": "^18.3.1",
-    "express": "^4.21.2",
-    "file-saver": "^2.0.5"
+    "bpmn-js": "^18.3.1"
   },
   "files": [
     "dist",
