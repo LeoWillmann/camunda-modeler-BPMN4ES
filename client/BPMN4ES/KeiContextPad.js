@@ -31,10 +31,10 @@ export default class KeiContextPad {
       const popupMenu = this._popupMenu;
       return {
         "add.kei": {
-          group: "kei",
-          className: "kei-icon kei-icon-leaf",
+          group: 'kei',
+          className: 'kei-icon kei-icon-leaf',
           title: translate("Assign KEI"),
-          html: '<div class="entry">!h</div>',
+          // html: '<div class="entry">!h</div>',
           action: {
             click: (event, element) => {
               const position = {

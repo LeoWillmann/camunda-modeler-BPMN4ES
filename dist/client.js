@@ -46,10 +46,10 @@ class KeiContextPad {
       const popupMenu = this._popupMenu;
       return {
         "add.kei": {
-          group: "kei",
-          className: "kei-icon kei-icon-leaf",
+          group: 'kei',
+          className: 'kei-icon kei-icon-leaf',
           title: translate("Assign KEI"),
-          html: '<div class="entry">!h</div>',
+          // html: '<div class="entry">!h</div>',
           action: {
             click: (event, element) => {
               const position = {
@@ -303,7 +303,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
 const HIGH_PRIORITY = 1500;
 const TASK_BORDER_RADIUS = 2;
 
@@ -482,6 +481,7 @@ const ZEEBE_LISTENER = "listeners";
 
 // Job worker constant
 const QUERY_WORKER = "custom-metrics_query";
+
 // Variable name constants
 const TYPE = "__customMetricsType";
 const DATA = "__customMetricsData";

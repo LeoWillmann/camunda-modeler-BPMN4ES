@@ -8,4 +8,5 @@
 module.exports = {
   name: 'BPMN4ES Camunda modeler plugin',
   script: './dist/client.js',
+  style: './style/BPMN4ES/bpmn4es.css',
 };

@@ -6,7 +6,6 @@ import {
 } from "tiny-svg";
 import { getRoundRectPath } from "bpmn-js/lib/draw/BpmnRenderUtil";
 import { is, getBusinessObject } from "bpmn-js/lib/util/ModelUtil";
-import { isAny } from "bpmn-js/lib/features/modeling/util/ModelingUtil";
 import { getExtensionElement, hasExtensionElement } from "./util.js";
 
 const HIGH_PRIORITY = 1500;

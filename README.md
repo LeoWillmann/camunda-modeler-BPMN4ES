@@ -10,11 +10,11 @@ The source of the BPMN4ES implementation is from [michel-medema/BPMN4ES](https:/
 - [Camunda 8 Desktop Modeler](https://docs.camunda.io/docs/components/modeler/desktop-modeler/)
 
 ## What it does
-The plugin adds a context menu option for bpmn tasks which allow the user to select a key environmental indicator to monitor for the given task. To monitor the values, the plugin automatically adds `Zeebe input variables` and `execution listener` with defined data in [KeiMenuProvider.js](client/BPMN4ES/KeiMenuProvider.js).
+The plugin adds a context menu option for bpmn tasks which allow the user to select a key environmental indicator to monitor for the given task. To monitor the values, the plugin automatically adds `Zeebe input variables` and `execution listener` with data defined in [KeiMenuProvider.js](client/BPMN4ES/KeiMenuProvider.js).
 
 ## How to monitor
 
-The monitoring requires a `job worker` of the given name in [KeiMenuProvider.js](client\BPMN4ES\KeiMenuProvider.js) which can process the provided Zeebe input variable data. The [camunda-zeebe-BPMN4ES](https://github.com/LeoWillmann/camunda-zeebe-BPMN4ES) github repository provides a java spring boot template to work with.
+The monitoring requires a `job worker` of the given name in [ZeebeElementExtension.js](client/BPMN4ES/ZeebeElementExtension.js) which can process the provided Zeebe input variable data. The [camunda-zeebe-BPMN4ES](https://github.com/LeoWillmann/camunda-zeebe-BPMN4ES) github repository provides a java spring boot template with already compatible and implemented job workers.
 
 ## Install the plugin
 
@@ -57,6 +57,9 @@ To prepare the plugin for release, executing all necessary steps, run:
 ```sh
 npm run all
 ```
+
+## Icons
+The icons shown is the [Google Material Symbols Outlined font](https://fonts.google.com/icons) and browse the website to find your own icons. Once found click on the icon and scroll down the popup to find the icon name, this is the name you will need to enter into the [KeiMenuProvider.js](client/BPMN4ES/KeiMenuProvider.js) icons field and [BPMN4ES.css](style/BPMN4ES/bpmn4es.css) kei-icon class's content.
 
 ## Additional Resources
 

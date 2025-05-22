@@ -11,6 +11,7 @@ const ZEEBE_LISTENER = "listeners";
 
 // Job worker constant
 const QUERY_WORKER = "custom-metrics_query";
+
 // Variable name constants
 const TYPE = "__customMetricsType";
 const DATA = "__customMetricsData";
