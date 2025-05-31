@@ -32,11 +32,27 @@
 /* Google Material Symbols Outlined font Import End*/
 
 
+/* Popup menu Header */
+.kei-input-textbox-header .djs-popup-label{
+  /* Hide the text. */
+    text-indent: 100%;
+    pointer-events: none;
+}
+
+/* Removes input Arrows/Spinners elements */
+.kei-input-textbox-header input::-webkit-inner-spin-button,
+.kei-input-textbox-header input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Popup menu entries */
 .kei-icon::before {
-	font-family: 'Material Symbols Outlined';
+  font-family: 'Material Symbols Outlined';
   font-weight: normal;
   font-style: normal;
-  font-size: 24px !important;  /* Preferred icon size */
+  font-size: 24px !important;
+  /* Preferred icon size */
   display: inline-block;
   line-height: 1;
   text-transform: none;
@@ -45,8 +61,6 @@
   white-space: nowrap;
   direction: ltr;
 }
-
-
 /* Context menu icon descriptions 
 
   Class names are ".kei-icon-" + the indicator id + "::before" 

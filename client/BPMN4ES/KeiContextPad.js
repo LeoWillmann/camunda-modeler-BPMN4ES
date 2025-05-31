@@ -34,6 +34,7 @@ export default class KeiContextPad {
           group: 'kei',
           className: 'kei-icon kei-icon-leaf',
           title: translate("Assign KEI"),
+          id: "add.kei",
           // html: '<div class="entry">!h</div>',
           action: {
             click: (event, element) => {
@@ -44,7 +45,7 @@ export default class KeiContextPad {
                   y: event.y,
                 },
               };
-              popupMenu.open(element, "kei-selector", position);
+              popupMenu.open(element, "kei-selector", position, { header: true });
             },
           },
         },

@@ -89,13 +89,40 @@ KeiMenuProvider.$inject = [
     "translate"
 ];
 
+KeiMenuProvider.prototype.getHeaderEntries = function (target) {
+    // The KEI selector header to include a textbox for entering target values.
+    return [
+        {
+            id: 'kei-popup-textbox-header',
+            // This text offsets the textbox for styling purposes.
+            // It has css styling applied to hide the text in kei-input-textbox-header 
+            label: this._translate('This is important text here'),
+            // Uses the imageHTML to create a textbox input field.
+            imageHtml: `
+                <div >
+                    <input
+                        type="number" 
+                        id="kei-popup-target-value-input"
+                        placeholder="${this._translate('Enter Target Value')}" 
+                        style="box-sizing: border-box;"
+                    />
+                </div>
+            `,
+            // No action, so it's not clickable
+            action: null,
+            // Optional: prevent highlighting on hover
+            className: 'no-hover kei-input-textbox-header',
+        }
+    ];
+};
+
 KeiMenuProvider.prototype.getEntries = function (target) {
     const self = this;
 
-    const entries = self._indicators.flatMap(function (indicator) {
-        const category = indicator.category;
+    const indicatorEntries = self._indicators.flatMap(function (indicatorCategory) {
+        const category = indicatorCategory.category;
 
-        return indicator.indicators.map(function (indicator) {
+        return indicatorCategory.indicators.map(function (indicator) {
             return {
                 title: self._translate(indicator.name),
                 label: self._translate(indicator.name),
@@ -107,17 +134,16 @@ KeiMenuProvider.prototype.getEntries = function (target) {
         });
     });
 
-    return entries;
+    return indicatorEntries;
 };
 
 // TODO: These values should be set through a properties panel.
 function createAction(moddle, modeling, target, indicator) {
     return function (event, entry) {
-        console.log(target);
-
-        // INFO: prompt() not supported in camunda modeler
-        // let targetValue = prompt(`Enter the target value for ${indicator.name} (leave empty if only monitored)`);
-        let targetValue = 0;
+        const targetValue = Number(document.getElementById('kei-popup-target-value-input').value);
+        console.log('Adding KEI: "' + indicator.name +
+            '", target value: ' + targetValue +
+            ', to element: "' + target.id + '"');
 
         // adds BPMN4ES XML
         addBPMN4ES(moddle, modeling, target, indicator, targetValue);

@@ -49,6 +49,7 @@ class KeiContextPad {
           group: 'kei',
           className: 'kei-icon kei-icon-leaf',
           title: translate("Assign KEI"),
+          id: "add.kei",
           // html: '<div class="entry">!h</div>',
           action: {
             click: (event, element) => {
@@ -59,7 +60,7 @@ class KeiContextPad {
                   y: event.y,
                 },
               };
-              popupMenu.open(element, "kei-selector", position);
+              popupMenu.open(element, "kei-selector", position, { header: true });
             },
           },
         },
@@ -200,13 +201,40 @@ KeiMenuProvider.$inject = [
     "translate"
 ];
 
+KeiMenuProvider.prototype.getHeaderEntries = function (target) {
+    // The KEI selector header to include a textbox for entering target values.
+    return [
+        {
+            id: 'kei-popup-textbox-header',
+            // This text offsets the textbox for styling purposes.
+            // It has css styling applied to hide the text in kei-input-textbox-header 
+            label: this._translate('This is important text here'),
+            // Uses the imageHTML to create a textbox input field.
+            imageHtml: `
+                <div >
+                    <input
+                        type="number" 
+                        id="kei-popup-target-value-input"
+                        placeholder="${this._translate('Enter Target Value')}" 
+                        style="box-sizing: border-box;"
+                    />
+                </div>
+            `,
+            // No action, so it's not clickable
+            action: null,
+            // Optional: prevent highlighting on hover
+            className: 'no-hover kei-input-textbox-header',
+        }
+    ];
+};
+
 KeiMenuProvider.prototype.getEntries = function (target) {
     const self = this;
 
-    const entries = self._indicators.flatMap(function (indicator) {
-        const category = indicator.category;
+    const indicatorEntries = self._indicators.flatMap(function (indicatorCategory) {
+        const category = indicatorCategory.category;
 
-        return indicator.indicators.map(function (indicator) {
+        return indicatorCategory.indicators.map(function (indicator) {
             return {
                 title: self._translate(indicator.name),
                 label: self._translate(indicator.name),
@@ -218,17 +246,16 @@ KeiMenuProvider.prototype.getEntries = function (target) {
         });
     });
 
-    return entries;
+    return indicatorEntries;
 };
 
 // TODO: These values should be set through a properties panel.
 function createAction(moddle, modeling, target, indicator) {
     return function (event, entry) {
-        console.log(target);
-
-        // INFO: prompt() not supported in camunda modeler
-        // let targetValue = prompt(`Enter the target value for ${indicator.name} (leave empty if only monitored)`);
-        let targetValue = 0;
+        const targetValue = Number(document.getElementById('kei-popup-target-value-input').value);
+        console.log('Adding KEI: "' + indicator.name +
+            '", target value: ' + targetValue +
+            ', to element: "' + target.id + '"');
 
         // adds BPMN4ES XML
         addBPMN4ES(moddle, modeling, target, indicator, targetValue);
@@ -3284,10 +3311,10 @@ function merge(target, ...sources) {
 
 /***/ }),
 
-/***/ "./resources/bpmn4es.json":
-/*!********************************!*\
-  !*** ./resources/bpmn4es.json ***!
-  \********************************/
+/***/ "./client/BPMN4ES/resources/bpmn4es.json":
+/*!***********************************************!*\
+  !*** ./client/BPMN4ES/resources/bpmn4es.json ***!
+  \***********************************************/
 /***/ ((module) => {
 
 module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://unpkg.com/moddle/resources/schema/moddle.json","name":"BPMN4ES","uri":"https://github.com/michel-medema/BPMN4ES","prefix":"bpmn4es","xml":{"tagAlias":"lowerCase"},"types":[{"name":"keyEnvironmentalIndicator","properties":[{"name":"id","isAttr":true,"type":"String"},{"name":"unit","isAttr":true,"type":"String"},{"name":"targetValue","isAttr":true,"type":"Real"},{"name":"icon","isAttr":true,"type":"String"}]},{"name":"environmentalIndicators","superClass":["Element"],"properties":[{"name":"indicators","isMany":true,"type":"keyEnvironmentalIndicator"}]}],"enumerations":[],"associations":[]}');
@@ -3357,7 +3384,7 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var camunda_modeler_plugin_helpers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! camunda-modeler-plugin-helpers */ "./node_modules/camunda-modeler-plugin-helpers/index.js");
 /* harmony import */ var _BPMN4ES_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./BPMN4ES/index.js */ "./client/BPMN4ES/index.js");
-/* harmony import */ var _resources_bpmn4es_json__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../resources/bpmn4es.json */ "./resources/bpmn4es.json");
+/* harmony import */ var _BPMN4ES_resources_bpmn4es_json__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./BPMN4ES/resources/bpmn4es.json */ "./client/BPMN4ES/resources/bpmn4es.json");
 
 // Register a plugin for bpmn-js
 
@@ -3367,7 +3394,7 @@ __webpack_require__.r(__webpack_exports__);
 // register moddle extension
 
 
-(0,camunda_modeler_plugin_helpers__WEBPACK_IMPORTED_MODULE_0__.registerBpmnJSModdleExtension)(_resources_bpmn4es_json__WEBPACK_IMPORTED_MODULE_2__);
+(0,camunda_modeler_plugin_helpers__WEBPACK_IMPORTED_MODULE_0__.registerBpmnJSModdleExtension)(_BPMN4ES_resources_bpmn4es_json__WEBPACK_IMPORTED_MODULE_2__);
 
 /******/ })()
 ;

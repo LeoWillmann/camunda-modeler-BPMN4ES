@@ -1,7 +1,7 @@
 {
-  "name": "camunda-modeler-BPMN4ES",
+  "name": "camunda-modeler-bpmn4es-plugin",
   "version": "1.0.0",
-  "description": "A plugin to include kei environmental indicators in bpmn models.",
+  "description": "A plugin to include key environmental indicators in bpmn models.",
   "main": "index.js",
   "scripts": {
     "all": "run-s bundle",
@@ -16,7 +16,8 @@
   "keywords": [
     "camunda",
     "modeler",
-    "plugin"
+    "plugin",
+    "BPMN4ES"
   ],
   "author": "Leo Willmann",
   "license": "MIT",
