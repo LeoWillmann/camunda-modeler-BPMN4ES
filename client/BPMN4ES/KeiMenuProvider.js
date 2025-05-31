@@ -1,6 +1,6 @@
 import { getBusinessObject } from "bpmn-js/lib/util/ModelUtil";
 import { getExtensionElement } from "./util.js";
-import { addZeebeVariables } from "./ZeebeElementExtension.js";
+import { addZeebeVariables, removeZeebeVariables } from "./ZeebeElementExtension.js";
 
 const INDICATORS = [
     {
@@ -113,6 +113,13 @@ KeiMenuProvider.prototype.getHeaderEntries = function (target) {
             action: null,
             // Optional: prevent highlighting on hover
             className: 'no-hover kei-input-textbox-header',
+        },
+        {
+            id: 'kei-popup-header-text',
+            title: "Remove KEI button",
+            label: 'delete',
+            className: 'material-symbols-outlined',
+            action: removeAction(this._moddle, this._modeling, target),
         }
     ];
 };
@@ -138,6 +145,23 @@ KeiMenuProvider.prototype.getEntries = function (target) {
     return indicatorEntries;
 };
 
+function removeAction(moddle, modeling, target) {
+    return function (event, entry) {
+        console.log('Removing KEI from element: "' + target.id + '"');
+        const businessObject = getBusinessObject(target);
+        const extensionElements = businessObject.extensionElements;
+
+        if (!extensionElements) return;
+
+        removeBPMN4ES(extensionElements);
+        removeZeebeVariables(modeling, target, extensionElements);
+
+        modeling.updateProperties(target, {
+            extensionElements,
+        });
+    }
+}
+
 // TODO: These values should be set through a properties panel.
 function createAction(moddle, modeling, target, indicator) {
     return function (event, entry) {
@@ -152,6 +176,17 @@ function createAction(moddle, modeling, target, indicator) {
         // adds Zeebe engine variables
         addZeebeVariables(moddle, modeling, target, indicator, targetValue);
     };
+}
+
+function removeBPMN4ES(extensionElements) {
+
+    // Filter away all bpmn4es:environmentalIndicators elements
+    const values = extensionElements.get('values');
+    const filtered = values.filter(
+        element => element.$type !== 'bpmn4es:environmentalIndicators');
+    
+    // Set the filtered values back
+    extensionElements.values = filtered;
 }
 
 function addBPMN4ES(moddle, modeling, target, indicator, targetValue) {
