@@ -93,7 +93,8 @@ KeiMenuProvider.prototype.getHeaderEntries = function (target) {
     // The KEI selector header to include a textbox for entering target values.
     return [
         {
-            id: 'kei-popup-textbox-header',
+            id: 'kei-popup-header-textbox',
+            title: "Enter Optional KEI Target Value",
             // This text offsets the textbox for styling purposes.
             // It has css styling applied to hide the text in kei-input-textbox-header 
             label: this._translate('This is important text here'),
@@ -124,8 +125,8 @@ KeiMenuProvider.prototype.getEntries = function (target) {
 
         return indicatorCategory.indicators.map(function (indicator) {
             return {
-                title: self._translate(indicator.name),
-                label: self._translate(indicator.name),
+                title: indicator.name + " (" + indicator.unit + ")",
+                label: indicator.name,
                 className: "kei-icon kei-icon-" + indicator.id,
                 id: indicator.id,
                 group: category,

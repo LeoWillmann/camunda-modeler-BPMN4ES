@@ -35,7 +35,6 @@ export default class KeiContextPad {
           className: 'kei-icon kei-icon-leaf',
           title: translate("Assign KEI"),
           id: "add.kei",
-          // html: '<div class="entry">!h</div>',
           action: {
             click: (event, element) => {
               const position = {
@@ -75,6 +74,6 @@ function getStartPosition(contextPad, elements) {
 
   return {
     x: padRect.left,
-    y: padRect.bottom,
+    y: padRect.bottom + Y_OFFSET,
   };
 }
